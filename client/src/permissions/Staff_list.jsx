@@ -24,22 +24,17 @@ const Staff_list = () => {
   const [page, setPage] = useState(1);
   const [postPerpage, setPostPerPage] = useState(10);
 
- 
-
   // getting data from server
   const getDATA = async () => {
-    const { data } = await axios.get("http://localhost:300/");
+    const { data } = await axios.get("http://localhost:8000/api/v1/staff/list");
     setPosts(data);
     setTotal(data.length);
   };
-console.log(posts);
+
   useEffect(() => {
     getDATA(); //List of all users
-    addStaff()
-    updateuser()
     getRoles()
   }, []);
-
   // changing value of inputs
   const changehandler = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
@@ -47,8 +42,8 @@ console.log(posts);
 
   // make a new user
   const addStaff = async () => {
-    console.log(email, password, role);
-    const { data } = await axios.post("http://localhost:300/create", {
+    const { data } = await axios.post("http://localhost:8000/api/v1/staff/list", {
+    // const { data } = await axios.post("http://localhost:300/create", {
       email: email,
       password: password,
       role: role,
@@ -61,7 +56,7 @@ console.log(posts);
   };
   // functin for hge toggle funtionality
   const toggle = async (id) => {
-    const { data } = await axios.post("http://localhost:300/toggle", {
+    const { data } = await axios.post("http://localhost:8000/api/v1/staff/toggle", {
       id: id,
     });
     setPosts(data);
@@ -71,9 +66,10 @@ console.log(posts);
     navigate("./permisssion");
   };
   // update A user
-  async function updateuser(e, id) {
-    e.preventDefault();
-    const { data } = await axios.post(`http://localhost:300/update/${id}`, {
+  async function updateuser( e,id) {
+
+    const { data } = await axios.post(`http://localhost:8000/api/v1/staff/update`, {
+      id: id,
       email: user.email,
       password: user.password,
       role: user.role,
@@ -98,21 +94,26 @@ console.log(posts);
       });
 }
   async function updatePermission() {
-    const {data} = await axios.post(`http://localhost:300/updatePermission`,{
+    const {data} = await axios.post(`http://localhost:8000/api/v1/staff/updatePermission`,{
       permission : permission,
       role: user.role,
       id : user.id
-    }).then(data)
+    })
+     if (data == true) {
+      setMess(data.message);
+    } else {
+      setMess(data.message);
+    }
   }
 
   async function changeFunc(e) {
-    const { data } = await axios.post(`http://localhost:300/permission`, {
+    const { data } = await axios.post(`http://localhost:8000/api/v1/staff/rolePermission`, {
       role: e.target.value,
       id: user.id,
     });
     setPermission(data);
-
   }
+
   const indexOfLastPage = page * postPerpage;
   const indexOfFirstPage = indexOfLastPage - postPerpage;
   const currentPosts = posts.slice(indexOfFirstPage, indexOfLastPage);
@@ -132,7 +133,7 @@ console.log(posts);
   };
 
   const getRoles = async () => {
-    const { data } = await axios.get(`http://localhost:300/getRoles`);
+    const { data } = await axios.get(`http://localhost:8000/api/v1/staff/rolePermission`);
     setRoleList(data);
   };
 
@@ -254,6 +255,7 @@ console.log(posts);
                       name="email"
                       value={user.email || ""}
                       onChange={(e) => changehandler(e)}
+                      required
                     />
                   </div>
                   <div className="field m-2 p-2">
@@ -265,6 +267,7 @@ console.log(posts);
                       name="password"
                       value={user.password || ""}
                       onChange={(e) => changehandler(e)}
+                      required
                     />
                   </div>
                   <div className="field m-2 p-2">

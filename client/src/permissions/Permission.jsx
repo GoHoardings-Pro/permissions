@@ -9,7 +9,7 @@ const Permission = () => {
   const [hrole, setHrole] = useState('')
 
   const getRoles = async () => {
-    const { data } = await axios.get(`http://localhost:300/getRoles`);
+    const { data } = await axios.get(`http://localhost:8000/api/v1/staff/rolePermission`);
     setRoleList(data);
   };
   const handleClick = (event) => {
@@ -33,14 +33,14 @@ const Permission = () => {
   const addrole = async (e) => {
     e.preventDefault();
     const { data } = await axios
-      .post(`http://localhost:300/createPermission`, {
+      .post(`http://localhost:8000/api/v1/permission/createPermission`, {
         role: newRole,
       })
       .then(data);
   };
 
   async function changeFunc(e) {
-    const { data } = await axios.post(`http://localhost:300/getPermissions`, {
+    const { data } = await axios.post(`http://localhost:8000/api/v1/permission/getPermissions`, {
       role: e.target.value,
     });
     setPermission(data);
@@ -52,14 +52,14 @@ const Permission = () => {
   }
 
   async function getUsers(e) {
-    const { data } = await axios.post(`http://localhost:300/getUser`, {
+    const { data } = await axios.post(`http://localhost:8000/api/v1/permission/getUser`, {
       role: e.target.value,
     });
     setUser(data);
     setHrole( e.target.value)
   }
 const updateRole = async (e) =>{
-    const data = await axios.post(`http://localhost:300/updateStaffPermission`,{
+    const data = await axios.post(`http://localhost:8000/api/v1/permission/updateStaffPermission`,{
       permission : permission,
       role: hrole,
       user_id : selectUser
@@ -70,7 +70,7 @@ const updateRole = async (e) =>{
     getRoles(); //List of all users
     handleClick();
     const  fatchdata  = async()=>{
-     const {data} = await axios.post(`http://localhost:300/getPermissions`, {
+     const {data} = await axios.post(`http://localhost:8000/api/v1/permission/getPermissions`, {
         role:  "Admin",
       });
       setPermission(data);
@@ -181,7 +181,7 @@ const updateRole = async (e) =>{
                   type="checkbox"
                   value={obj.id}
                   name={obj.id}
-                  onClick={handleUser}
+                  onChange={handleUser}
                 />
               </>
             ))}
